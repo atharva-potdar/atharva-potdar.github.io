@@ -69,16 +69,18 @@
                     >Micro-Exchange<span class="sr-only"> on GitHub</span></a
                   >
                 </h3>
-                <p class="entry__stack">C++23 · Clang · perf · strace · Google Benchmark</p>
+                <p class="entry__stack">C++23 · Clang · perf · Google Benchmark</p>
                 <p class="entry__desc">
                   A limit order matching engine. Orders live in a free-list arena and an intrusive
-                  doubly linked list per price level, so every hot-path operation is O(1) and
-                  allocates nothing.
+                  list per price level, so insert, cancel and match are O(1) and allocate nothing
+                  after startup. Level lookup is O(log n), and creating a level shifts the array.
                 </p>
                 <p class="entry__note">
-                  Profiled <b>50M+ operations</b> with CPU pinning and SCHED_FIFO. The first run
-                  showed a measurement artifact in the harness rather than in the book; once removed,
-                  batch throughput ranged 13–15M ops/sec across runs.
+                  Benchmarked 50.5M dispatched operations pinned to one core, timed with lfence and
+                  rdtscp minus a measured empty-region cost. The harness had to be fixed first: it
+                  counted failed operations as work and timed an error path. Insert costs 100 ns at
+                  512 levels and 7.2 µs at 16,384. Throughput holds 8 to 11M ops/s in cache, 2.3M at
+                  65k live orders.
                 </p>
               </div>
               <dl class="facts">
@@ -87,12 +89,12 @@
                   <dd>20 ns</dd>
                 </div>
                 <div>
-                  <dt>p99.9 insert, worst case</dt>
+                  <dt>p99.9 insert, 512 levels</dt>
                   <dd>100 ns</dd>
                 </div>
                 <div>
-                  <dt>Batch throughput</dt>
-                  <dd>13–15M ops/s</dd>
+                  <dt>Engine ops/s, 4k book</dt>
+                  <dd>8–11M</dd>
                 </div>
               </dl>
             </li>
