@@ -6,7 +6,7 @@
     <title>Atharva Potdar, systems engineer</title>
     <meta
       name="description"
-      content="Systems software in C, C++, Rust and Go: a limit order matching engine at 20 ns p99.9 in cache, a zero-copy NASDAQ ITCH parser, Raft consensus, and an LSM storage engine."
+      content="Systems software in C, C++, Rust and Go: a limit order matching engine at 20 ns p99.9 in cache, a zero-copy NASDAQ ITCH parser, a lock-free SPSC ring buffer, Raft consensus, and an LSM storage engine."
     />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)" />
@@ -205,6 +205,47 @@
                 <div>
                   <dt>Index</dt>
                   <dd>Two-level + Bloom</dd>
+                </div>
+              </dl>
+            </li>
+
+            <li class="entry">
+              <p class="entry__num" aria-hidden="true">05</p>
+              <div class="entry__body">
+                <h3 class="entry__title">
+                  <a class="entry__link" href="https://github.com/atharva-potdar/spscqueue"
+                    >SPSCQueue<span class="sr-only"> on GitHub</span></a
+                  >
+                </h3>
+                <p class="entry__stack">C++20 · CMake · GoogleTest · TSan</p>
+                <p class="entry__desc">
+                  A bounded, zero-allocation, lock-free single-producer single-consumer ring buffer.
+                  Size is a power of two, checked with <code>std::has_single_bit</code> and indexed
+                  with a mask instead of a modulo. Capacity is N-1, so full and empty are
+                  distinguishable without a counter. The lock-free requirement is a
+                  <code>static_assert</code>, not a comment.
+                </p>
+                <p class="entry__note">
+                  Three numbers, kept apart on purpose: 3.25 ns is one enqueue and one dequeue in
+                  one thread, 109M pairs/s is pipelined throughput across cores, and a real one-way
+                  handoff is 100 ns p50. An earlier build reported 7.9 ns as cross-core latency; it
+                  was throughput measured as latency. Padding head and tail onto separate cache
+                  lines is worth 2.4× between physical cores and nothing at all between SMT
+                  siblings, so the figure means nothing without its topology.
+                </p>
+              </div>
+              <dl class="facts">
+                <div>
+                  <dt>Single-thread pair</dt>
+                  <dd>3.25 ns</dd>
+                </div>
+                <div>
+                  <dt>One-way handoff, same CCX</dt>
+                  <dd>100 ns p50</dd>
+                </div>
+                <div>
+                  <dt>Padding, separate cores</dt>
+                  <dd>2.4×</dd>
                 </div>
               </dl>
             </li>

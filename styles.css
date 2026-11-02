@@ -336,6 +336,8 @@ a:focus-visible {
 .entry__link {
   position: relative;
   display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   /* 31 px of text at the smallest display size, padded to a 44 px target.
      The negative margin keeps the extra box out of the layout. */
   padding-block: 8px;
@@ -378,6 +380,7 @@ a:focus-visible {
   font-family: var(--mono);
   font-size: 0.875em;
   letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
 }
 
 .entry__note {
